@@ -40,11 +40,13 @@ export class FiltersSelect<D> extends React.PureComponent<FiltersSelectProps<D>,
         this.setState({ filters: { ...this.state.filters, [this.counter.toString()]: null } });
     }
 
-    handleFilterChange(key: string, filter: Filter) {
+    handleFilterChange(key: string, filter: Filter, pushChange: boolean) {
         const newFilters: NullableFilters = { ...this.state.filters };
         newFilters[key] = filter;
         this.setState({ filters: newFilters });
-        this.pushNewFilters(newFilters);
+        if (pushChange) {
+            this.pushNewFilters(newFilters);
+        }
     }
 
     handleFilterRemove(key: string) {
@@ -76,7 +78,7 @@ export class FiltersSelect<D> extends React.PureComponent<FiltersSelectProps<D>,
                         <FilterSelect
                             fields={this.props.fields}
                             defaultFilter={this.state.filters[key]}
-                            onFilterChange={(filter) => this.handleFilterChange(key, filter)}
+                            onFilterChange={(filter, pushChange) => this.handleFilterChange(key, filter, pushChange)}
                         />
                         <button onClick={() => this.handleFilterRemove(key)}>
                             Remove
