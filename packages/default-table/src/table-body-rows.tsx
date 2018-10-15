@@ -19,31 +19,34 @@ export class TableBodyRows<D> extends React.Component<TableBodyRowsProps<D>, nev
     }
 
     render() {
-        return this.props.tableDescription.bodyRows.map((row, index) =>
-            <this.props.tableBodyRowComponent key={index} row={row}>
-                {this.props.tableDescription.columns.filter((column) => column.type === 'head-column').map((column) => {
-                    const id = getBodyRowCellId(index, column);
-                    return <this.props.tableBodyCellComponent
-                        key={id}
-                        id={id}
-                        row={row}
-                        column={column}
-                    >
-                        {row.label}
-                    </this.props.tableBodyCellComponent>;
-                })}
-                {row.cells.map((cell) => {
-                    const id = getBodyRowCellId(index, cell.column);
-                    return <this.props.tableBodyCellComponent
-                        key={id}
-                        id={id}
-                        row={row}
-                        column={cell.column}
-                    >
-                        {cell.column.valueDescription.renderer(cell.value)}
-                    </this.props.tableBodyCellComponent>;
-                })}
-            </this.props.tableBodyRowComponent>
+        return this.props.tableDescription.bodyRows.map((row, index) => {
+                const result = { ...row, selected: !!this.props.tableDescription.bodySelectedRow && this.props.tableDescription.bodySelectedRow.index === index };
+                console.log(index, this.props.tableDescription.bodySelectedRow, result);
+                return <this.props.tableBodyRowComponent key={index} row={result}>
+                    {this.props.tableDescription.columns.filter((column) => column.type === 'head-column').map((column) => {
+                        const id = getBodyRowCellId(index, column);
+                        return <this.props.tableBodyCellComponent
+                            key={id}
+                            id={id}
+                            row={row}
+                            column={column}
+                        >
+                            {row.label}
+                        </this.props.tableBodyCellComponent>;
+                    })}
+                    {row.cells.map((cell) => {
+                        const id = getBodyRowCellId(index, cell.column);
+                        return <this.props.tableBodyCellComponent
+                            key={id}
+                            id={id}
+                            row={row}
+                            column={cell.column}
+                        >
+                            {cell.column.valueDescription.renderer(cell.value)}
+                        </this.props.tableBodyCellComponent>;
+                    })}
+                </this.props.tableBodyRowComponent>;
+            }
         );
     }
 }
