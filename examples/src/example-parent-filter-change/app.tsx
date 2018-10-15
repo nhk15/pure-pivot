@@ -5,7 +5,7 @@ import { createConfigurationBuilder, Configuration } from '../../../packages/cor
 import { createTableConfigurationBuilder } from '../../../packages/default-table/src/configuration';
 import { virtualGrid } from '../../../packages/virtual-scrolling-grid/src/virtual-scrolling-grid';
 import { generateTableDescription } from '../../../packages/core/src/generate-table-description';
-import { TableDescription } from '../../../packages/core/src/table/model';
+import { TableDescription, BodyRow } from '../../../packages/core/src/table/model';
 import { Resizer } from '../../../packages/column-resizer/src/resizer-component';
 import { Sizes } from '../../../packages/column-resizer/src/model';
 import { getHeadValueRowCellId } from '../../../packages/core/src/util/id-helper';
@@ -53,6 +53,7 @@ export interface AppState {
     editingFilters: Filters;
     filters: Filters;
     filtersKey: number;
+    bodySelectedRow?: BodyRow<Data>;
 }
 
 const defaultFilters = {};
@@ -67,9 +68,12 @@ export class App extends React.Component<{}, AppState> {
 
     tableConfiguration = createTableConfigurationBuilder<Data>()
         .withPlugin(virtualGrid())
+        .withTableBodyRowComponent((props) => {
+            return <div style={{ fontWeight: props.row.selected ? 'bold' : 'normal' }} {...props} onClick={(event) => this.setState({bodySelectedRow: props.row})} />;
+        })
         .build();
 
-    generateTableDescription = memoize<TableDescription<Data>, (configuration: Configuration<Data>, data: Data[]) => TableDescription<Data>>(generateTableDescription, { one: true, timeout: -1 });
+    generateTableDescription = memoize<TableDescription<Data>, (configuration: Configuration<Data>, data: Data[], bodySelectedRow?: BodyRow<Data>) => TableDescription<Data>>(generateTableDescription, { one: true, timeout: -1 });
 
     buildConfiguration = memoize((filters: Filters) => {
         return configurationBuilder
@@ -125,8 +129,7 @@ export class App extends React.Component<{}, AppState> {
     }
 
     render() {
-        const tableDescription = this.generateTableDescription(this.buildConfiguration(this.state.filters), exampleData);
-
+        const tableDescription = this.generateTableDescription(this.buildConfiguration(this.state.filters), exampleData, this.state.bodySelectedRow);
         return <React.Fragment>
             <h3>Quick Filters</h3>
             <button onClick={() => this.handleQuickFilter('deleted')}>Deleted</button>
