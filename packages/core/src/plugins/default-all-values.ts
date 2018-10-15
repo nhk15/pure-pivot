@@ -1,9 +1,9 @@
 import { Configuration } from '../configuration';
 import { ObjectKeys } from '../util/keys';
-import { TableDescription } from '../table/model';
+import { TableDescription, BodyRow } from '../table/model';
 
-export function defaultAllValues<D>(generateTableDescription: (configuration: Configuration<D>, data: D[]) => TableDescription<D>): (configuration: Configuration<D>, data: D[]) => TableDescription<D> {
-    return (configuration: Configuration<D>, data: D[]) => {
+export function defaultAllValues<D>(generateTableDescription: (configuration: Configuration<D>, data: D[], bodySelectedRow?: BodyRow<D>) => TableDescription<D>, bodySelectedRow?: BodyRow<D>): (configuration: Configuration<D>, data: D[], bodySelectedRow?: BodyRow<D>) => TableDescription<D> {
+    return (configuration: Configuration<D>, data: D[], bodySelectedRow?: BodyRow<D>) => {
         let values = configuration.values;
 
         if (values.length <= 0 && data.length >= 1) {
@@ -15,6 +15,6 @@ export function defaultAllValues<D>(generateTableDescription: (configuration: Co
             }));
         }
 
-        return generateTableDescription({ ...configuration, values }, data);
+        return generateTableDescription({ ...configuration, values }, data, bodySelectedRow);
     };
 }

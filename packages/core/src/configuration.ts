@@ -5,7 +5,7 @@ import { Selections } from './selections/model';
 import { defaultConfigurationPlugins } from './plugins/default-plugins';
 import { Sorter, Sorting } from './sorting/model';
 import { generateTableDescription } from './generate-table-description';
-import { TableDescription } from './table/model';
+import { TableDescription, BodyRow } from './table/model';
 
 export interface Configuration<D> {
     headColumn: boolean;
@@ -23,7 +23,7 @@ export interface ConfigurationBuilder<D> {
     selections: Selections<D>;
     sorting: Sorting<D>;
     values: ValueReducers<D>;
-    generateTableDescription: (configuration: Configuration<D>, data: D[]) => TableDescription<D>;
+    generateTableDescription: (configuration: Configuration<D>, data: D[], bodySelectedRow?: BodyRow<D>) => TableDescription<D>;
     withHeadColumn<C>(this: C, headColumn: boolean): C;
     withFilters<C>(this: C, filters: Filters<D>): C;
     withFilter<C>(this: C, filter: Filter<D>): C;
