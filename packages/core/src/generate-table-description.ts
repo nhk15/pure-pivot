@@ -124,7 +124,7 @@ function createBodyRows<D>(recursiveRows: RecursiveGroup[], sortedIndices: numbe
     return accumulator;
 }
 
-export const generateTableDescription = defaultGenerateTableDescriptionPlugins.reduce((generateTableDescription, plugin) => plugin(generateTableDescription), <D>(configuration: Configuration<D>, data: D[]): TableDescription<D> => {
+export const generateTableDescription = defaultGenerateTableDescriptionPlugins.reduce((generateTableDescription, plugin) => plugin(generateTableDescription), <D>(configuration: Configuration<D>, data: D[], bodySelectedRow?: BodyRow<D>): TableDescription<D> => {
     const filteredData = applyFilters(configuration.filters, data);
     const columns = applyGrouping(configuration.groups, filteredData);
     const rows = applyGrouping(configuration.selections, filteredData);
@@ -148,6 +148,7 @@ export const generateTableDescription = defaultGenerateTableDescriptionPlugins.r
         headGroupRows: groupHeaderRows,
         headValueRow: valueHeaderRow,
         columns: [...headColumns, ...columnDescriptors.dataColumns],
-        bodyRows
+        bodyRows,
+        bodySelectedRow
     };
 });

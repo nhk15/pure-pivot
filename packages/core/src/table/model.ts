@@ -52,6 +52,7 @@ export interface BodyRow<D> {
     label: string;
     index: number;
     cells: BodyCell<D, {}>[];
+    selected?: boolean;
 }
 
 export interface TableDescription<D> {
@@ -67,4 +68,5 @@ export interface TableDescription<D> {
     headValueRow: ValueHeaderRow<D>;
     columns: ValueColumnDescriptor<D>[];
     bodyRows: BodyRow<D>[];
+    bodySelectedRow?: BodyRow<D>;
 }
